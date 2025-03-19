@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Upright:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styling.css">
+</head>
+<body>
+
+    <div class="settings-icon" onclick="toggleSettings()">⚙️</div>
+
+    <div class="auth-box">
+        <h1>Create Account</h1>
+        <input type="text" id="username" placeholder="Username">
+        <input type="email" id="email" placeholder="Email">
+        <input type="password" id="password" placeholder="Password">
+        <p class="error" id="errorMessage"></p>
+        <button onclick="validateSignup()">Sign Up</button>
+    </div>
+
+    <div class="settings-menu" id="settingsMenu">
+        <label>Brightness: <input type="range" min="50" max="100" id="brightnessControl" oninput="adjustBrightness()"></label>
+        <label>Volume: <input type="range" min="0" max="100" id="volumeControl" oninput="adjustVolume()"></label>
+        <button onclick="readPage()">🔊 Read Page</button>
+        <button onclick="toggleSettings()">Close</button>
+    </div>
+
+    <script>
+        function toggleSettings() {
+            var menu = document.getElementById('settingsMenu');
+            menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
+        }
+
+        function adjustBrightness() {
+            var brightness = document.getElementById('brightnessControl').value;
+            document.body.style.filter = 'brightness(' + brightness + '%)';
+        }
+
+        function adjustVolume() {
+            var volume = document.getElementById('volumeControl').value;
+            console.log('Volume adjusted to: ' + volume);
+        }
+
+        function readPage() {
+            let text = document.body.innerText;
+            let speech = new SpeechSynthesisUtterance(text);
+            speech.rate = 1;
+            speech.volume = document.getElementById("volumeControl").value / 100;
+            speechSynthesis.speak(speech);
+        }
+        function validateSignup() {
+            var username = document.getElementById('username').value.trim();
+            var email = document.getElementById('email').value.trim();
+            var password = document.getElementById('password').value.trim();
+            var errorMessage = document.getElementById('errorMessage');
+
+            // Email Validation: Must contain '@'
+            var emailPattern = /^[^@]+@[^@]+\.[a-zA-Z]{2,}$/;
+            if (!emailPattern.test(email)) {
+                errorMessage.textContent = "Invalid email! Must contain '@'.";
+                return;
+            }
+
+            // Password Validation: At least 6 chars, at least 3 numbers
+            var numCount = (password.match(/\d/g) || []).length; // Count numbers
+            if (password.length < 6 || numCount < 3) {
+                errorMessage.textContent = "Password must be at least 6 characters and contain at least 3 numbers!";
+                return;
+            }
+
+            // If all validations pass
+            errorMessage.textContent = "";
+            alert("Signup successful!");
+            window.location.href = "login.html"; // Redirect to login
+        }
+    </script>
+
+</body>
+</html>
